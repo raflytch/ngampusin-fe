@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-const RegisterForm = () => {
+const RegisterForm = (): JSX.Element => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

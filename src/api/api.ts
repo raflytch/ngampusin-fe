@@ -3,14 +3,14 @@ import Cookies from "js-cookie";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const axiosInstance = axios.create({
+export const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-axiosInstance.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = Cookies.get("jwt");
     if (token) {
@@ -23,7 +23,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-axiosInstance.interceptors.response.use(
+api.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
       try {
         const refreshToken = Cookies.get("refreshToken");
         if (refreshToken) {
-          const response = await axiosInstance.post("/auth/refresh-token", {
+          const response = await api.post("/auth/refresh-token", {
             refreshToken,
           });
 
@@ -44,7 +44,7 @@ axiosInstance.interceptors.response.use(
           Cookies.set("jwt", token);
 
           originalRequest.headers.Authorization = `Bearer ${token}`;
-          return axiosInstance(originalRequest);
+          return api(originalRequest);
         }
       } catch (refreshError) {
         Cookies.remove("jwt");
@@ -57,4 +57,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+export default api;
