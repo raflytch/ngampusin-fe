@@ -12,14 +12,12 @@ import {
 } from "../ui/select";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRegister } from "@/hooks/use-register";
 import { Loader2, Eye, EyeOff } from "lucide-react";
@@ -39,7 +37,6 @@ const RegisterForm = (): JSX.Element => {
     isRegistering,
     isRegisterError,
     registerError,
-    registerData,
     isRegisterSuccess,
   } = useRegister();
 
