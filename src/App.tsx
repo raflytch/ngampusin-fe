@@ -1,44 +1,30 @@
-import { JSX, useState } from "react";
-import { Button } from "./components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "./components/ui/alert-dialog";
+import { JSX, Suspense } from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { routes } from "./routes/routes";
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
 
 const App = (): JSX.Element => {
-  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
-
-  const handleClick = (): void => {
-    setIsAlertOpen(true);
-  };
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl">Hello</h1>
-      <p>This is a simple React application.</p>
-      <Button variant="default" onClick={handleClick}>
-        Click Me
-      </Button>
-
-      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Halo</AlertDialogTitle>
-            <AlertDialogDescription>
-              Selamat datang di aplikasi React!
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction>OK</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={
+              route.protected && !isAuthenticated ? (
+                <Navigate to="/login" />
+              ) : (
+                <route.element />
+              )
+            }
+          />
+        ))}
+      </Routes>
+    </Suspense>
   );
 };
 
