@@ -1,12 +1,11 @@
 import { JSX } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { routes } from "./routes/routes";
-import { useSelector } from "react-redux";
-import { RootState } from "./store";
+import { useAuth } from "./hooks/use-auth";
 import MainLayout from "./components/layout/MainLayout";
 
 const App = (): JSX.Element => {
-  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated } = useAuth();
 
   return (
     <MainLayout>

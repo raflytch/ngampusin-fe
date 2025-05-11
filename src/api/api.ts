@@ -1,6 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
+import { store } from "@/store";
+import { logout } from "@/features/auth/authSlice";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -59,22 +61,12 @@ api.interceptors.response.use(
       } catch (error) {
         Cookies.remove("jwt");
         Cookies.remove("refreshToken");
-        const customEvent = new CustomEvent("auth:expired");
-        window.dispatchEvent(customEvent);
+        store.dispatch(logout());
         return Promise.reject(error);
       }
     }
     return Promise.reject(error);
   }
 );
-
-export const setupAuthListener = (navigate: any) => {
-  const handleAuthExpired = () => {
-    navigate("/auth/login");
-  };
-
-  window.addEventListener("auth:expired", handleAuthExpired);
-  return () => window.removeEventListener("auth:expired", handleAuthExpired);
-};
 
 export default api;

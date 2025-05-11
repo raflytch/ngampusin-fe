@@ -1,9 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { authService } from "@/services/auth.service";
-import { setupAuthListener } from "@/api/api";
 import {
   loginStart,
   loginSuccess,
@@ -11,15 +9,14 @@ import {
   logout,
 } from "@/features/auth/authSlice";
 import { LoginRequest, LoginResponse, LoginError } from "@/types/auth.types";
+import { RootState } from "@/store";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const cleanup = setupAuthListener(navigate);
-    return cleanup;
-  }, [navigate]);
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const loginMutation = useMutation<LoginResponse, LoginError, LoginRequest>({
     mutationFn: (data) => {
@@ -47,5 +44,7 @@ export const useAuth = () => {
     isLoginError: loginMutation.isError,
     loginError: loginMutation.error,
     logout: handleLogout,
+    isAuthenticated,
+    user,
   };
 };
