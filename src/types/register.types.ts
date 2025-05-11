@@ -23,3 +23,11 @@ export interface RegisterError {
   status: number;
   statusCode: number;
 }
+
+export interface RegisterFormState {
+  name: string;
+  email: string;
+  password: string;
+  fakultas: string;
+  showPassword: boolean;
+}

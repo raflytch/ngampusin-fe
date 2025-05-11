@@ -21,14 +21,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useRegister } from "@/hooks/use-register";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { RegisterFormState } from "@/types/register.types";
 
 const RegisterForm = (): JSX.Element => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fakultas, setFakultas] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState<RegisterFormState>({
+    name: "",
+    email: "",
+    password: "",
+    fakultas: "",
+    showPassword: false,
+  });
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
@@ -52,8 +55,20 @@ const RegisterForm = (): JSX.Element => {
     }
   }, [isRegisterSuccess]);
 
+  const handleChange = (
+    field: keyof Omit<RegisterFormState, "showPassword">,
+    value: string
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setFormData((prev) => ({ ...prev, showPassword: !prev.showPassword }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const { name, email, password, fakultas } = formData;
     register({ name, email, password, fakultas });
   };
 
@@ -64,10 +79,6 @@ const RegisterForm = (): JSX.Element => {
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
     navigate("/auth/login");
-  };
-
-  const handleShowPasswordToggle = () => {
-    setShowPassword(!showPassword);
   };
 
   return (
@@ -87,8 +98,8 @@ const RegisterForm = (): JSX.Element => {
               <Input
                 id="name"
                 placeholder="Enter your full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
                 required
               />
             </div>
@@ -99,8 +110,8 @@ const RegisterForm = (): JSX.Element => {
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
                 required
               />
             </div>
@@ -110,18 +121,18 @@ const RegisterForm = (): JSX.Element => {
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type={formData.showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={(e) => handleChange("password", e.target.value)}
                   required
                 />
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 flex items-center pr-3"
-                  onClick={handleShowPasswordToggle}
+                  onClick={togglePasswordVisibility}
                 >
-                  {showPassword ? (
+                  {formData.showPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-500" />
                   ) : (
                     <Eye className="h-5 w-5 text-gray-500" />
@@ -132,7 +143,10 @@ const RegisterForm = (): JSX.Element => {
 
             <div className="space-y-2">
               <Label htmlFor="fakultas">Fakultas</Label>
-              <Select value={fakultas} onValueChange={setFakultas}>
+              <Select
+                value={formData.fakultas}
+                onValueChange={(value) => handleChange("fakultas", value)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select fakultas" />
                 </SelectTrigger>
@@ -178,7 +192,10 @@ const RegisterForm = (): JSX.Element => {
               disabled={isRegistering}
             >
               {isRegistering ? (
-                <Loader2 className="animate-spin mr-2" />
+                <>
+                  <Loader2 className="animate-spin mr-2" />
+                  Registering...
+                </>
               ) : (
                 "Register"
               )}

@@ -16,7 +16,7 @@ const App = (): JSX.Element => {
             path={route.path}
             element={
               route.protected && !isAuthenticated ? (
-                <Navigate to="/login" />
+                <Navigate to="/auth/login" />
               ) : (
                 <route.element />
               )
