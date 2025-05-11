@@ -1,14 +1,15 @@
-import { JSX, Suspense } from "react";
+import { JSX } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { routes } from "./routes/routes";
 import { useSelector } from "react-redux";
 import { RootState } from "./store";
+import MainLayout from "./components/layout/MainLayout";
 
 const App = (): JSX.Element => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <MainLayout>
       <Routes>
         {routes.map((route) => (
           <Route
@@ -24,7 +25,7 @@ const App = (): JSX.Element => {
           />
         ))}
       </Routes>
-    </Suspense>
+    </MainLayout>
   );
 };
 
