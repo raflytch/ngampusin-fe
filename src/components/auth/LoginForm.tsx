@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { images } from "@/constants/images";
 
 const LoginForm = (): JSX.Element => {
   const [formData, setFormData] = useState<LoginFormState>({
@@ -24,7 +25,8 @@ const LoginForm = (): JSX.Element => {
   });
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
-  const { login, isLoggingIn, isLoginError, loginError } = useAuth();
+  const { login, googleLogin, isLoggingIn, isLoginError, loginError } =
+    useAuth();
 
   useEffect(() => {
     if (isLoginError) {
@@ -47,6 +49,10 @@ const LoginForm = (): JSX.Element => {
     e.preventDefault();
     const { email, password } = formData;
     login({ email, password });
+  };
+
+  const handleGoogleLogin = () => {
+    googleLogin();
   };
 
   const handleErrorDialogClose = () => {
@@ -124,6 +130,32 @@ const LoginForm = (): JSX.Element => {
               )}
             </Button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleLogin}
+            disabled={isLoggingIn}
+          >
+            <img
+              src={images.googleIcon}
+              alt="Google"
+              className="h-5 w-5 mr-2"
+            />
+            Sign in with Google
+          </Button>
 
           <div className="text-center">
             <p className="text-sm text-gray-500">

@@ -43,6 +43,17 @@ export const authService = {
     }
   },
 
+  googleLogin: (): void => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    window.location.href = `${apiUrl}/auth/google`;
+  },
+
+  handleGoogleCallback: (token: string): void => {
+    if (token) {
+      Cookies.set("jwt", token);
+    }
+  },
+
   logout: () => {
     Cookies.remove("jwt");
     Cookies.remove("refreshToken");
