@@ -1,6 +1,6 @@
 import { User } from "@/types/auth.types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Mail, GraduationCap, BookOpen, Trophy } from "lucide-react";
+import { Camera, Mail, GraduationCap } from "lucide-react";
 import { useState, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
