@@ -41,29 +41,9 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const refreshToken = Cookies.get("refreshToken");
-        if (!refreshToken) {
-          throw new Error("No refresh token");
-        }
-
-        const response = await api.post("/auth/refresh-token", {
-          refreshToken,
-        });
-        const { token } = response.data;
-        Cookies.set("jwt", token);
-
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return api(originalRequest);
-      } catch (error) {
-        Cookies.remove("jwt");
-        Cookies.remove("refreshToken");
-        store.dispatch(logout());
-        return Promise.reject(error);
-      }
+    if (error.response?.status === 401) {
+      Cookies.remove("jwt");
+      store.dispatch(logout());
     }
     return Promise.reject(error);
   }

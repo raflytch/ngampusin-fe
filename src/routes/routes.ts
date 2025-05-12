@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Post from "@/pages/Post";
+import Profile from "@/pages/Profile";
 
 interface Route {
   path: string;
@@ -26,6 +27,11 @@ export const routes: Route[] = [
   {
     path: "/post",
     element: Post,
+    protected: true,
+  },
+  {
+    path: "/profile",
+    element: Profile,
     protected: true,
   },
 ];

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { Menu, X, User, LogOut, Settings } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,6 +19,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isAuthenticated, user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -38,13 +39,17 @@ const Navbar = () => {
       .substring(0, 2);
   };
 
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
+
   return (
     <nav className="bg-background border-b border-border sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link
-              to={isAuthenticated && user ? `/u/${user.name}` : "/"}
+              to={isAuthenticated ? "/post" : "/"}
               className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent"
             >
               ngampus.in
@@ -76,7 +81,7 @@ const Navbar = () => {
                       <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleProfileClick}>
                           <User className="mr-2 h-4 w-4" />
                           <span>Profile</span>
                         </DropdownMenuItem>
@@ -158,6 +163,7 @@ const Navbar = () => {
                     variant="ghost"
                     className="w-full justify-start"
                     size="sm"
+                    onClick={handleProfileClick}
                   >
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>

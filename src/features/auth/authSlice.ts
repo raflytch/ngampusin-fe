@@ -68,7 +68,6 @@ export const authSlice = createSlice({
       state.user = null;
       state.error = null;
       Cookies.remove("jwt");
-      Cookies.remove("refreshToken");
     },
   },
 });
