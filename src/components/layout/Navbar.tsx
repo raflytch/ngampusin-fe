@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/use-auth";
 import { Menu, X, User, LogOut, Settings } from "lucide-react";
@@ -14,12 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import gsap from "gsap";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout, isAuthenticated, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
@@ -28,6 +30,35 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (mobileMenuRef.current) {
+      if (isOpen) {
+        const tl = gsap.timeline();
+        tl.set(mobileMenuRef.current, {
+          display: "block",
+          opacity: 0,
+          y: -10,
+        });
+        tl.to(mobileMenuRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      } else {
+        gsap.to(mobileMenuRef.current, {
+          opacity: 0,
+          y: -10,
+          duration: 0.2,
+          ease: "power2.in",
+          onComplete: () => {
+            gsap.set(mobileMenuRef.current, { display: "none" });
+          },
+        });
+      }
+    }
+  }, [isOpen]);
 
   const getInitials = (name: string) => {
     if (!name) return "U";
@@ -133,75 +164,77 @@ const Navbar = () => {
         </div>
       </div>
 
-      {isOpen && (
-        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-sm">
-          <div className="pt-4 pb-3">
-            {isAuthenticated && user ? (
-              <div className="px-4">
-                <div className="flex items-center p-4 mb-2 bg-muted/50 rounded-lg">
-                  <Avatar className="h-12 w-12 border-2 border-primary/20">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {getInitials(user.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <div className="text-base font-medium">{user.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {user.email}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      <Badge variant="outline" className="font-normal">
-                        {user.fakultas}
-                      </Badge>
-                    </div>
+      <div
+        ref={mobileMenuRef}
+        className="md:hidden fixed top-16 left-0 right-0 z-50 bg-background shadow-lg border-t border-border/50 backdrop-blur-sm"
+        style={{ display: "none" }}
+      >
+        <div className="pt-4 pb-3">
+          {isAuthenticated && user ? (
+            <div className="px-4">
+              <div className="flex items-center p-4 mb-2 bg-muted/50 rounded-lg">
+                <Avatar className="h-12 w-12 border-2 border-primary/20">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    {getInitials(user.name)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="ml-3">
+                  <div className="text-base font-medium">{user.name}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {user.email}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    <Badge variant="outline" className="font-normal">
+                      {user.fakultas}
+                    </Badge>
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-1 mt-4">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    size="sm"
-                    onClick={handleProfileClick}
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start"
-                    size="sm"
-                  >
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </Button>
-                  <Button
-                    onClick={logout}
-                    variant="destructive"
-                    className="w-full mt-4 justify-start"
-                    size="sm"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
-                  </Button>
-                </div>
+              <div className="space-y-1 mt-4">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  size="sm"
+                  onClick={handleProfileClick}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  size="sm"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Button>
+                <Button
+                  onClick={logout}
+                  variant="destructive"
+                  className="w-full mt-4 justify-start"
+                  size="sm"
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Logout</span>
+                </Button>
               </div>
-            ) : (
-              <div className="px-4 space-y-2">
-                <Link to="/auth/login">
-                  <Button className="w-full">Login</Button>
-                </Link>
-                <Link to="/auth/register">
-                  <Button variant="outline" className="w-full">
-                    Register
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="px-4 space-y-2">
+              <Link to="/auth/login">
+                <Button className="w-full">Login</Button>
+              </Link>
+              <Link to="/auth/register">
+                <Button variant="outline" className="w-full">
+                  Register
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };
