@@ -37,3 +37,12 @@ export interface PostsResponse {
   data: Post[];
   meta: PostMeta;
 }
+
+export interface CreatePostRequest {
+  title: string;
+  content: string;
+  fakultas: string;
+  kategori: string;
+  isAnonymous: boolean;
+  image?: File;
+}

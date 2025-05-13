@@ -4,7 +4,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { postService } from "@/services/post.service";
-import { PostsResponse } from "@/types/post.types";
+import { CreatePostRequest, Post, PostsResponse } from "@/types/post.types";
+import { toast } from "sonner";
 
 export const usePosts = () => {
   const queryClient = useQueryClient();
@@ -25,6 +26,37 @@ export const usePosts = () => {
       return lastPage.meta.hasNextPage ? lastPage.meta.page + 1 : undefined;
     },
     initialPageParam: 1,
+  });
+
+  const createPostMutation = useMutation({
+    mutationFn: (postData: CreatePostRequest) =>
+      postService.createPost(postData),
+    onSuccess: (newPost: Post) => {
+      queryClient.setQueryData<{
+        pages: PostsResponse[];
+        pageParams: number[];
+      }>(["posts"], (old) => {
+        if (!old) return { pages: [], pageParams: [] };
+
+        const updatedPages = [...old.pages];
+        if (updatedPages.length > 0) {
+          updatedPages[0] = {
+            ...updatedPages[0],
+            data: [newPost, ...updatedPages[0].data],
+          };
+        }
+
+        return {
+          ...old,
+          pages: updatedPages,
+        };
+      });
+
+      toast.success("Post created successfully!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to create post");
+    },
   });
 
   const likeMutation = useMutation({
@@ -123,5 +155,7 @@ export const usePosts = () => {
     error,
     refetch,
     toggleLike,
+    createPost: createPostMutation.mutate,
+    isCreatingPost: createPostMutation.isPending,
   };
 };

@@ -20,8 +20,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRegister } from "@/hooks/use-register";
+import { useAuth } from "@/hooks/use-auth";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { RegisterFormState } from "@/types/register.types";
+import { images } from "@/constants/images";
 
 const RegisterForm = (): JSX.Element => {
   const navigate = useNavigate();
@@ -42,6 +44,8 @@ const RegisterForm = (): JSX.Element => {
     registerError,
     isRegisterSuccess,
   } = useRegister();
+
+  const { googleLogin } = useAuth();
 
   useEffect(() => {
     if (isRegisterError) {
@@ -79,6 +83,10 @@ const RegisterForm = (): JSX.Element => {
   const handleSuccessDialogClose = () => {
     setShowSuccessDialog(false);
     navigate("/auth/login");
+  };
+
+  const handleGoogleSignUp = () => {
+    googleLogin();
   };
 
   return (
@@ -201,6 +209,27 @@ const RegisterForm = (): JSX.Element => {
               )}
             </Button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t"></span>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full flex items-center justify-center gap-2"
+            onClick={handleGoogleSignUp}
+          >
+            <img src={images.googleIcon} alt="Google" className="w-5 h-5" />
+            Sign up with Google
+          </Button>
 
           <div className="text-center">
             <p className="text-sm text-gray-500">
