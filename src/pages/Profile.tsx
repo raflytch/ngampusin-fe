@@ -3,7 +3,7 @@ import { useProfile } from "@/hooks/use-profile";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileForm from "@/components/profile/ProfileForm";
 import ProfileAlert from "@/components/profile/ProfileAlert";
-import { Info } from "lucide-react";
+import { Info, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Toaster } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,20 +16,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import UserPostCard from "@/components/profile/UserPostCard";
+import EditPostDialog from "@/components/profile/EditPostDialog";
+import DeletePostDialog from "@/components/profile/DeletePostDialog";
+import { UpdatePostRequest } from "@/types/post.types";
+import { Post } from "@/types/auth.types";
 
 const Profile = (): JSX.Element => {
   const {
     profile,
+    posts,
     isLoading,
     error,
     updateProfile,
     isUpdating,
     updateAvatar,
     isAvatarUploading,
+    updatePost,
+    isUpdatingPost,
+    deletePost,
+    isDeletingPost,
   } = useProfile();
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [deletingPost, setDeletingPost] = useState<Post | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -60,6 +74,32 @@ const Profile = (): JSX.Element => {
 
   const handleAvatarChange = async (file: File) => {
     await updateAvatar(file);
+  };
+
+  const handleEditPost = (postId: string) => {
+    const postToEdit = posts.find((post) => post.id === postId);
+    if (postToEdit) {
+      setEditingPost(postToEdit);
+      setIsEditDialogOpen(true);
+    }
+  };
+
+  const handleDeletePost = (postId: string) => {
+    const postToDelete = posts.find((post) => post.id === postId);
+    if (postToDelete) {
+      setDeletingPost(postToDelete);
+      setIsDeleteDialogOpen(true);
+    }
+  };
+
+  const handleUpdatePost = (postId: string, data: UpdatePostRequest) => {
+    updatePost({ postId, data });
+    setIsEditDialogOpen(false);
+  };
+
+  const handleConfirmDelete = (postId: string) => {
+    deletePost(postId);
+    setIsDeleteDialogOpen(false);
   };
 
   return (
@@ -106,9 +146,29 @@ const Profile = (): JSX.Element => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-12 text-muted-foreground">
-                      <p>You haven't created any posts yet.</p>
-                    </div>
+                    {posts && posts.length > 0 ? (
+                      <div className="space-y-6">
+                        {posts.map((post) => (
+                          <UserPostCard
+                            key={post.id}
+                            post={post}
+                            onEdit={handleEditPost}
+                            onDelete={handleDeletePost}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-center py-12">
+                        <AlertCircle className="h-10 w-10 text-muted-foreground/50 mb-4" />
+                        <p className="text-muted-foreground font-medium">
+                          You haven't created any posts yet
+                        </p>
+                        <p className="text-sm text-muted-foreground/70 mt-1 max-w-sm">
+                          Share your knowledge, ask questions, or start a
+                          discussion with your peers
+                        </p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -132,6 +192,27 @@ const Profile = (): JSX.Element => {
           }, 100);
         }}
       />
+
+      {editingPost && (
+        <EditPostDialog
+          post={editingPost}
+          isOpen={isEditDialogOpen}
+          onClose={() => setIsEditDialogOpen(false)}
+          onUpdate={handleUpdatePost}
+          isUpdating={isUpdatingPost}
+        />
+      )}
+
+      {deletingPost && (
+        <DeletePostDialog
+          postId={deletingPost.id}
+          postTitle={deletingPost.title}
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          onDelete={handleConfirmDelete}
+          isDeleting={isDeletingPost}
+        />
+      )}
 
       <Toaster position="top-right" richColors />
     </>

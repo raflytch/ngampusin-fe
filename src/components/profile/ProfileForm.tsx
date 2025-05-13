@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User } from "@/types/auth.types";
+import { ProfileUpdateRequest, User } from "@/types/auth.types";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProfileUpdateRequest } from "@/services/profile.service";
 import {
   Loader2,
   User as UserIcon,

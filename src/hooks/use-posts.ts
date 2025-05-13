@@ -90,10 +90,11 @@ export const usePosts = () => {
 
       return { previousData };
     },
-    onError: (_, __, context) => {
+    onError: (error: any, _, context) => {
       if (context?.previousData) {
         queryClient.setQueryData(["posts"], context.previousData);
       }
+      toast.error(error.message || "Failed to like post");
     },
   });
 
@@ -128,10 +129,11 @@ export const usePosts = () => {
 
       return { previousData };
     },
-    onError: (_, __, context) => {
+    onError: (error: any, _, context) => {
       if (context?.previousData) {
         queryClient.setQueryData(["posts"], context.previousData);
       }
+      toast.error(error.message || "Failed to unlike post");
     },
   });
 
@@ -139,9 +141,9 @@ export const usePosts = () => {
 
   const toggleLike = (postId: string, isLiked: boolean) => {
     if (isLiked) {
-      unlikeMutation.mutate(postId);
-    } else {
       likeMutation.mutate(postId);
+    } else {
+      unlikeMutation.mutate(postId);
     }
   };
 

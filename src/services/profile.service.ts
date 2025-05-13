@@ -1,16 +1,10 @@
 import api from "@/api/api";
-import { User } from "@/types/auth.types";
+import {
+  ProfileResponse,
+  ProfileUpdateRequest,
+  User,
+} from "@/types/auth.types";
 import { AxiosError } from "axios";
-
-export interface ProfileResponse {
-  user: User;
-}
-
-export interface ProfileUpdateRequest {
-  name: string;
-  email: string;
-  fakultas: string;
-}
 
 export const profileService = {
   getProfile: async (): Promise<ProfileResponse> => {

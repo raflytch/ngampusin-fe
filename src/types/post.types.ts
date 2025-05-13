@@ -19,7 +19,7 @@ export interface Post {
   author: PostAuthor;
   likesCount: number;
   commentsCount: number;
-  isLiked: boolean;
+  isLiked?: boolean;
 }
 
 export interface PostMeta {
@@ -45,4 +45,10 @@ export interface CreatePostRequest {
   kategori: string;
   isAnonymous: boolean;
   image?: File;
+}
+
+export interface UpdatePostRequest {
+  title?: string;
+  content?: string;
+  kategori?: string;
 }

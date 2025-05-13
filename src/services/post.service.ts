@@ -1,5 +1,10 @@
 import api from "@/api/api";
-import { CreatePostRequest, Post, PostsResponse } from "@/types/post.types";
+import {
+  CreatePostRequest,
+  Post,
+  PostsResponse,
+  UpdatePostRequest,
+} from "@/types/post.types";
 
 export const postService = {
   getPosts: async (
@@ -32,6 +37,19 @@ export const postService = {
         "Content-Type": "multipart/form-data",
       },
     });
+    return response.data;
+  },
+
+  updatePost: async (
+    postId: string,
+    data: UpdatePostRequest
+  ): Promise<Post> => {
+    const response = await api.patch<Post>(`/posts/${postId}`, data);
+    return response.data;
+  },
+
+  deletePost: async (postId: string): Promise<{ message: string }> => {
+    const response = await api.delete<{ message: string }>(`/posts/${postId}`);
     return response.data;
   },
 

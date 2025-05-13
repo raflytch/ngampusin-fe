@@ -140,11 +140,11 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
 
   return (
     <Card className="mb-6 shadow-sm border-border/40 mx-auto rounded-xl">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 border border-primary/10 flex-shrink-0">
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border border-primary/10 flex-shrink-0">
             <AvatarImage src={user?.avatar || undefined} alt={user?.name} />
-            <AvatarFallback className="bg-primary/10 text-primary font-medium">
+            <AvatarFallback className="bg-primary/10 text-primary font-medium text-xs sm:text-sm">
               {getInitials(user?.name || "")}
             </AvatarFallback>
           </Avatar>
@@ -153,71 +153,76 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
             <AlertDialogTrigger asChild className="flex-1">
               <Button
                 variant="outline"
-                className="text-muted-foreground w-full h-auto py-2.5 px-4 justify-start font-normal text-sm sm:text-base rounded-full border-input/80 hover:bg-muted/70"
+                className="text-muted-foreground w-full h-auto py-2 sm:py-2.5 px-3 sm:px-4 justify-start font-normal text-xs sm:text-sm rounded-full border-input/80 hover:bg-muted/70"
               >
                 Share something with your peers...
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-xl">
-              <div className="sticky top-0 z-10 bg-background border-b px-6 py-4 rounded-t-xl">
+            <AlertDialogContent className="max-w-full sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0 gap-0 rounded-xl w-[95%] sm:w-auto">
+              <div className="sticky top-0 z-10 bg-background border-b px-4 sm:px-6 py-3 sm:py-4 rounded-t-xl">
                 <AlertDialogHeader className="pb-0 text-center">
-                  <AlertDialogTitle className="text-xl">
+                  <AlertDialogTitle className="text-lg sm:text-xl">
                     Create a post
                   </AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogDescription className="text-xs sm:text-sm">
                     Share knowledge, ask questions, or connect with other
                     students
                   </AlertDialogDescription>
                 </AlertDialogHeader>
               </div>
 
-              <div className="px-6 py-4 overflow-y-auto max-h-[calc(90vh-120px)]">
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="flex items-center gap-3 bg-muted/30 p-3 rounded-lg">
-                    <Avatar className="h-10 w-10 border border-primary/10 flex-shrink-0">
+              <div className="px-4 sm:px-6 py-3 sm:py-4 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-4 sm:space-y-5"
+                >
+                  <div className="flex items-center gap-2 sm:gap-3 bg-muted/30 p-2 sm:p-3 rounded-lg">
+                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10 border border-primary/10 flex-shrink-0">
                       <AvatarImage
                         src={user?.avatar || undefined}
                         alt={user?.name}
                       />
-                      <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                      <AvatarFallback className="bg-primary/10 text-primary font-medium text-xs sm:text-sm">
                         {getInitials(user?.name || "")}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-sm truncate">
+                        <span className="font-medium text-xs sm:text-sm truncate">
                           {formData.isAnonymous ? "Anonymous" : user?.name}
                         </span>
                         {!formData.isAnonymous && user?.fakultas && (
                           <Badge
                             variant="outline"
-                            className="font-normal text-xs truncate"
+                            className="font-normal text-[10px] sm:text-xs truncate hidden sm:inline-flex"
                           >
                             {user.fakultas}
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-2 mt-0.5 sm:mt-1">
+                        <div className="flex items-center gap-1 sm:gap-1.5">
                           <Switch
                             id="anonymous-mode"
                             checked={formData.isAnonymous}
                             onCheckedChange={(checked) =>
                               handleChange("isAnonymous", checked)
                             }
-                            className="scale-75"
+                            className="scale-70 sm:scale-75"
                           />
                           <Label
                             htmlFor="anonymous-mode"
-                            className="text-xs text-muted-foreground cursor-pointer"
+                            className="text-[10px] sm:text-xs text-muted-foreground cursor-pointer"
                           >
                             {formData.isAnonymous ? (
-                              <span className="flex items-center gap-1">
-                                <EyeOff className="h-3 w-3" /> Anonymous
+                              <span className="flex items-center gap-0.5 sm:gap-1">
+                                <EyeOff className="h-2.5 w-2.5 sm:h-3 sm:w-3" />{" "}
+                                Anonymous
                               </span>
                             ) : (
-                              <span className="flex items-center gap-1">
-                                <Eye className="h-3 w-3" /> Public
+                              <span className="flex items-center gap-0.5 sm:gap-1">
+                                <Eye className="h-2.5 w-2.5 sm:h-3 sm:w-3" />{" "}
+                                Public
                               </span>
                             )}
                           </Label>
@@ -227,15 +232,17 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                   </div>
 
                   <div>
-                    <div className="flex items-center gap-2 mb-1.5">
+                    <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
                       <Label
                         htmlFor="title"
-                        className="text-sm font-medium flex items-center gap-1"
+                        className="text-xs sm:text-sm font-medium flex items-center gap-1"
                       >
-                        <PenLine className="h-3.5 w-3.5" />
+                        <PenLine className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         Title
                       </Label>
-                      <span className="text-xs text-red-500">*</span>
+                      <span className="text-[10px] sm:text-xs text-red-500">
+                        *
+                      </span>
                     </div>
                     <Input
                       id="title"
@@ -243,20 +250,22 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                       value={formData.title}
                       onChange={(e) => handleChange("title", e.target.value)}
                       required
-                      className="border-input/50 focus-visible:ring-primary/40"
+                      className="border-input/50 focus-visible:ring-primary/40 text-xs sm:text-sm h-8 sm:h-10"
                     />
                   </div>
 
                   <div>
-                    <div className="flex items-center gap-2 mb-1.5">
+                    <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
                       <Label
                         htmlFor="content"
-                        className="text-sm font-medium flex items-center gap-1"
+                        className="text-xs sm:text-sm font-medium flex items-center gap-1"
                       >
-                        <Info className="h-3.5 w-3.5" />
+                        <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         Content
                       </Label>
-                      <span className="text-xs text-red-500">*</span>
+                      <span className="text-[10px] sm:text-xs text-red-500">
+                        *
+                      </span>
                     </div>
                     <Textarea
                       id="content"
@@ -264,21 +273,23 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                       value={formData.content}
                       onChange={(e) => handleChange("content", e.target.value)}
                       required
-                      className="min-h-[120px] border-input/50 focus-visible:ring-primary/40 resize-none"
+                      className="min-h-[100px] sm:min-h-[120px] border-input/50 focus-visible:ring-primary/40 resize-none text-xs sm:text-sm"
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 md:gap-6">
+                  <div className="grid grid-cols-1 gap-3 sm:gap-4 md:gap-6">
                     <div>
-                      <div className="flex items-center gap-2 mb-1.5">
+                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
                         <Label
                           htmlFor="kategori"
-                          className="text-sm font-medium flex items-center gap-1"
+                          className="text-xs sm:text-sm font-medium flex items-center gap-1"
                         >
-                          <Hash className="h-3.5 w-3.5" />
+                          <Hash className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                           Category
                         </Label>
-                        <span className="text-xs text-red-500">*</span>
+                        <span className="text-[10px] sm:text-xs text-red-500">
+                          *
+                        </span>
                       </div>
                       <Select
                         value={formData.kategori}
@@ -288,82 +299,61 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                       >
                         <SelectTrigger
                           id="kategori"
-                          className="border-input/50 focus-visible:ring-primary/40 w-full"
+                          className="border-input/50 focus-visible:ring-primary/40 w-full h-8 sm:h-10 text-xs sm:text-sm"
                         >
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="TUGAS">
+                          <SelectItem
+                            value="TUGAS"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center gap-2">
                               <Badge
                                 className={cn(
-                                  "text-xs px-2 py-0.5",
+                                  "text-[10px] sm:text-xs px-1.5 sm:px-2 py-0 sm:py-0.5",
                                   getCategoryColor("TUGAS")
                                 )}
                               >
                                 TUGAS
                               </Badge>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-[10px] sm:text-xs text-muted-foreground">
                                 Assignments & study material
                               </span>
                             </div>
                           </SelectItem>
-                          <SelectItem value="DISKUSI">
+                          <SelectItem
+                            value="CURHAT"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center gap-2">
                               <Badge
                                 className={cn(
-                                  "text-xs px-2 py-0.5",
-                                  getCategoryColor("DISKUSI")
-                                )}
-                              >
-                                DISKUSI
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">
-                                Academic discussions
-                              </span>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="PENGUMUMAN">
-                            <div className="flex items-center gap-2">
-                              <Badge
-                                className={cn(
-                                  "text-xs px-2 py-0.5",
-                                  getCategoryColor("PENGUMUMAN")
-                                )}
-                              >
-                                PENGUMUMAN
-                              </Badge>
-                              <span className="text-xs text-muted-foreground">
-                                Important announcements
-                              </span>
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="CURHAT">
-                            <div className="flex items-center gap-2">
-                              <Badge
-                                className={cn(
-                                  "text-xs px-2 py-0.5",
+                                  "text-[10px] sm:text-xs px-1.5 sm:px-2 py-0 sm:py-0.5",
                                   getCategoryColor("CURHAT")
                                 )}
                               >
                                 CURHAT
                               </Badge>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-[10px] sm:text-xs text-muted-foreground">
                                 Share your feelings
                               </span>
                             </div>
                           </SelectItem>
-                          <SelectItem value="MEME">
+                          <SelectItem
+                            value="MEME"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center gap-2">
                               <Badge
                                 className={cn(
-                                  "text-xs px-2 py-0.5",
+                                  "text-[10px] sm:text-xs px-1.5 sm:px-2 py-0 sm:py-0.5",
                                   getCategoryColor("MEME")
                                 )}
                               >
                                 MEME
                               </Badge>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-[10px] sm:text-xs text-muted-foreground">
                                 Fun and entertainment
                               </span>
                             </div>
@@ -373,15 +363,17 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                     </div>
 
                     <div>
-                      <div className="flex items-center gap-2 mb-1.5">
+                      <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
                         <Label
                           htmlFor="fakultas"
-                          className="text-sm font-medium flex items-center gap-1"
+                          className="text-xs sm:text-sm font-medium flex items-center gap-1"
                         >
-                          <Building2 className="h-3.5 w-3.5" />
+                          <Building2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                           Faculty
                         </Label>
-                        <span className="text-xs text-red-500">*</span>
+                        <span className="text-[10px] sm:text-xs text-red-500">
+                          *
+                        </span>
                       </div>
                       <Select
                         value={formData.fakultas}
@@ -391,74 +383,107 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                       >
                         <SelectTrigger
                           id="fakultas"
-                          className="border-input/50 focus-visible:ring-primary/40 w-full"
+                          className="border-input/50 focus-visible:ring-primary/40 w-full h-8 sm:h-10 text-xs sm:text-sm"
                         >
                           <SelectValue placeholder="Select your faculty" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Fakultas Ilmu Komputer">
+                          <SelectItem
+                            value="Fakultas Ilmu Komputer"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-blue-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-blue-500" />
                               Fakultas Ilmu Komputer
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Matematika dan Ilmu Pengetahuan Alam">
+                          <SelectItem
+                            value="Fakultas Matematika dan Ilmu Pengetahuan Alam"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-green-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-green-500" />
                               FMIPA
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Teknik">
+                          <SelectItem
+                            value="Fakultas Teknik"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-amber-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-amber-500" />
                               Fakultas Teknik
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Ekonomi dan Bisnis">
+                          <SelectItem
+                            value="Fakultas Ekonomi dan Bisnis"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-purple-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-purple-500" />
                               Fakultas Ekonomi dan Bisnis
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Ilmu Budaya">
+                          <SelectItem
+                            value="Fakultas Ilmu Budaya"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-red-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-red-500" />
                               Fakultas Ilmu Budaya
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Hukum">
+                          <SelectItem
+                            value="Fakultas Hukum"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-indigo-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-indigo-500" />
                               Fakultas Hukum
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Ilmu Sosial dan Politik">
+                          <SelectItem
+                            value="Fakultas Ilmu Sosial dan Politik"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-cyan-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-cyan-500" />
                               Fakultas Ilmu Sosial dan Politik
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Psikologi">
+                          <SelectItem
+                            value="Fakultas Psikologi"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-pink-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-pink-500" />
                               Fakultas Psikologi
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Kesehatan Masyarakat">
+                          <SelectItem
+                            value="Fakultas Kesehatan Masyarakat"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-teal-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-teal-500" />
                               Fakultas Kesehatan Masyarakat
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Kedokteran">
+                          <SelectItem
+                            value="Fakultas Kedokteran"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-blue-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-blue-500" />
                               Fakultas Kedokteran
                             </div>
                           </SelectItem>
-                          <SelectItem value="Fakultas Kedokteran Gigi">
+                          <SelectItem
+                            value="Fakultas Kedokteran Gigi"
+                            className="text-xs sm:text-sm"
+                          >
                             <div className="flex items-center">
-                              <BookOpen className="h-4 w-4 mr-2 text-emerald-500" />
+                              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-emerald-500" />
                               Fakultas Kedokteran Gigi
                             </div>
                           </SelectItem>
@@ -468,19 +493,19 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                   </div>
 
                   <div>
-                    <div className="flex items-center gap-2 mb-1.5">
+                    <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-1.5">
                       <Label
                         htmlFor="image"
-                        className="text-sm font-medium flex items-center gap-1"
+                        className="text-xs sm:text-sm font-medium flex items-center gap-1"
                       >
-                        <Image className="h-3.5 w-3.5" />
+                        <Image className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                         Image
                       </Label>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-[10px] sm:text-xs text-muted-foreground">
                         (optional)
                       </span>
                     </div>
-                    <div className="grid gap-1.5">
+                    <div className="grid gap-1 sm:gap-1.5">
                       <input
                         ref={fileInputRef}
                         id="image"
@@ -492,51 +517,51 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                       <Button
                         type="button"
                         variant="outline"
-                        className="h-20 border-dashed border-2 justify-center flex-col gap-2 hover:bg-muted/50 border-input/50 w-full"
+                        className="h-16 sm:h-20 border-dashed border-2 justify-center flex-col gap-1 sm:gap-2 hover:bg-muted/50 border-input/50 w-full"
                         onClick={() => fileInputRef.current?.click()}
                       >
-                        <Image className="h-5 w-5 text-muted-foreground" />
-                        <span className="text-xs text-muted-foreground">
+                        <Image className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">
                           Click to upload an image
                         </span>
                       </Button>
                     </div>
 
                     {imagePreview && (
-                      <div className="relative mt-3 rounded-md overflow-hidden border border-border">
+                      <div className="relative mt-2 sm:mt-3 rounded-md overflow-hidden border border-border">
                         <Button
                           type="button"
                           size="icon"
                           variant="destructive"
-                          className="h-6 w-6 absolute top-2 right-2 rounded-full opacity-90 hover:opacity-100"
+                          className="h-5 w-5 sm:h-6 sm:w-6 absolute top-1 sm:top-2 right-1 sm:right-2 rounded-full opacity-90 hover:opacity-100"
                           onClick={removeImage}
                         >
-                          <X className="h-3 w-3" />
+                          <X className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                         </Button>
                         <img
                           src={imagePreview}
                           alt="Preview"
-                          className="w-full h-auto max-h-[200px] object-cover"
+                          className="w-full h-auto max-h-[150px] sm:max-h-[200px] object-cover"
                         />
                       </div>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-lg text-sm">
-                    <Info className="h-4 w-4 text-blue-600" />
-                    <p className="text-blue-700 text-xs">
+                  <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-blue-50 rounded-lg">
+                    <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 flex-shrink-0" />
+                    <p className="text-blue-700 text-[10px] sm:text-xs">
                       Your post will be visible to all students once published.
                     </p>
                   </div>
                 </form>
               </div>
 
-              <div className="sticky bottom-0 z-10 bg-background border-t px-6 py-4 rounded-b-xl">
-                <AlertDialogFooter className="flex gap-2 pt-0 sm:space-x-2">
+              <div className="sticky bottom-0 z-10 bg-background border-t px-4 sm:px-6 py-3 sm:py-4 rounded-b-xl">
+                <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 pt-0 sm:space-x-2">
                   <AlertDialogCancel
                     type="button"
                     onClick={() => onOpenChange(false)}
-                    className="sm:w-auto w-full mt-0"
+                    className="sm:w-auto w-full mt-0 h-8 sm:h-10 text-xs sm:text-sm"
                   >
                     Cancel
                   </AlertDialogCancel>
@@ -544,16 +569,16 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
                     type="submit"
                     onClick={handleSubmit}
                     disabled={isCreating}
-                    className="sm:w-auto w-full bg-primary hover:bg-primary/90"
+                    className="sm:w-auto w-full bg-primary hover:bg-primary/90 h-8 sm:h-10 text-xs sm:text-sm"
                   >
                     {isCreating ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
                         Creating...
                       </>
                     ) : (
                       <>
-                        <PenLine className="mr-2 h-4 w-4" />
+                        <PenLine className="mr-1.5 sm:mr-2 h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         Create post
                       </>
                     )}

@@ -40,7 +40,7 @@ const PostList = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 mx-auto max-w-full md:max-w-3xl px-2 sm:px-4">
         {[...Array(3)].map((_, index) => (
           <PostSkeleton key={index} />
         ))}
@@ -49,7 +49,7 @@ const PostList = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 mx-auto max-w-full md:max-w-3xl px-2 sm:px-4">
       {posts.map((post) => (
         <PostCard key={post.id} post={post} onLike={toggleLike} />
       ))}

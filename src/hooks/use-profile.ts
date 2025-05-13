@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  profileService,
-  ProfileUpdateRequest,
-} from "@/services/profile.service";
+import { profileService } from "@/services/profile.service";
+import { postService } from "@/services/post.service";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/features/auth/authSlice";
 import { toast } from "sonner";
+import { ProfileUpdateRequest } from "@/types/auth.types";
+import { UpdatePostRequest } from "@/types/post.types";
 
 export const useProfile = () => {
   const queryClient = useQueryClient();
@@ -60,6 +60,87 @@ export const useProfile = () => {
     },
   });
 
+  const updatePostMutation = useMutation({
+    mutationFn: ({
+      postId,
+      data,
+    }: {
+      postId: string;
+      data: UpdatePostRequest;
+    }) => postService.updatePost(postId, data),
+    onMutate: async ({ postId, data }) => {
+      await queryClient.cancelQueries({ queryKey: ["profile"] });
+
+      const previousData = queryClient.getQueryData(["profile"]);
+
+      if (profileData && profileData.posts) {
+        const updatedPosts = profileData.posts.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                ...data,
+              }
+            : post
+        );
+
+        const optimisticData = {
+          ...profileData,
+          posts: updatedPosts,
+        };
+
+        queryClient.setQueryData(["profile"], optimisticData);
+      }
+
+      return { previousData };
+    },
+    onSuccess: () => {
+      toast.success("Post updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+    onError: (error: any, _variables, context) => {
+      toast.error(error.message || "Failed to update post");
+      if (context?.previousData) {
+        queryClient.setQueryData(["profile"], context.previousData);
+      }
+    },
+  });
+
+  const deletePostMutation = useMutation({
+    mutationFn: (postId: string) => postService.deletePost(postId),
+    onMutate: async (postId) => {
+      await queryClient.cancelQueries({ queryKey: ["profile"] });
+
+      const previousData = queryClient.getQueryData(["profile"]);
+
+      if (profileData && profileData.posts) {
+        const filteredPosts = profileData.posts.filter(
+          (post) => post.id !== postId
+        );
+
+        const optimisticData = {
+          ...profileData,
+          posts: filteredPosts,
+        };
+
+        queryClient.setQueryData(["profile"], optimisticData);
+      }
+
+      return { previousData };
+    },
+    onSuccess: () => {
+      toast.success("Post deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+    onError: (error: any, _variables, context) => {
+      toast.error(error.message || "Failed to delete post");
+      if (context?.previousData) {
+        queryClient.setQueryData(["profile"], context.previousData);
+      }
+    },
+  });
+
   const updateAvatar = async (file: File) => {
     if (!file) return;
 
@@ -105,10 +186,15 @@ export const useProfile = () => {
 
   return {
     profile: profileData?.user,
+    posts: profileData?.posts || [],
     isLoading,
     error,
     updateProfile: updateProfileMutation.mutate,
     isUpdating: updateProfileMutation.isPending,
+    updatePost: updatePostMutation.mutate,
+    isUpdatingPost: updatePostMutation.isPending,
+    deletePost: deletePostMutation.mutate,
+    isDeletingPost: deletePostMutation.isPending,
     updateAvatar,
     isAvatarUploading,
     refetchProfile: refetch,
