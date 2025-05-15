@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, JSX } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -45,7 +45,10 @@ interface CreatePostFormProps {
   isCreating: boolean;
 }
 
-const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
+const CreatePostForm = ({
+  onCreatePost,
+  isCreating,
+}: CreatePostFormProps): JSX.Element => {
   const { user } = useAuth();
   const [showFullForm, setShowFullForm] = useState(false);
   const [formData, setFormData] = useState<CreatePostRequest>({
@@ -153,7 +156,7 @@ const CreatePostForm = ({ onCreatePost, isCreating }: CreatePostFormProps) => {
             <AlertDialogTrigger asChild className="flex-1">
               <Button
                 variant="outline"
-                className="text-muted-foreground w-full h-auto py-2 sm:py-2.5 px-3 sm:px-4 justify-start font-normal text-xs sm:text-sm rounded-full border-input/80 hover:bg-muted/70"
+                className="text-muted-foreground max-w-full h-auto py-2 sm:py-2.5 px-3 sm:px-4 justify-start font-normal text-xs sm:text-sm rounded-full border-input/80 hover:bg-muted/70"
               >
                 Share something with your peers...
               </Button>
